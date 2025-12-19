@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 
+import QueryProvider from "@/shared/providers/QueryProvider";
 import StoreProvider from "@/shared/providers/StoreProvider";
 import ThemeRegistry from "@/shared/providers/ThemeRegistry";
 
@@ -18,9 +19,11 @@ export default function RootLayout({
 	return (
 		<html lang="es">
 			<body>
-				<StoreProvider>
-					<ThemeRegistry>{children}</ThemeRegistry>
-				</StoreProvider>
+				<QueryProvider>
+					<StoreProvider>
+						<ThemeRegistry>{children}</ThemeRegistry>
+					</StoreProvider>
+				</QueryProvider>
 			</body>
 		</html>
 	);
