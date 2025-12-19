@@ -1,0 +1,29 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		},
+		"includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"semicolons": "always"
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"files": {
+		"includes": ["**", "!**/.next", "!**/node_modules", "!**/public"]
+	}
+}
