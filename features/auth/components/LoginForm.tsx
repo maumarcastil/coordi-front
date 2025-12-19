@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +19,7 @@ import Typography from "@mui/material/Typography";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import { loginSchema } from "@/features/auth/schemas/login.schema";
-import { loginUser } from "@/features/auth/services/auth.service";
-import type { LoginFormData } from "@/features/auth/types/auth.types";
+import type { LoginFormData } from "@/shared/types/auth.types";
 
 export default function LoginForm() {
 	const router = useRouter();
@@ -36,12 +36,19 @@ export default function LoginForm() {
 	const onSubmit = async (data: LoginFormData) => {
 		setError(null);
 
-		try {
-			await loginUser(data);
-			router.push("/dashboard");
-		} catch (err) {
-			setError(err instanceof Error ? err.message : "Error al iniciar sesión");
+		const result = await signIn("credentials", {
+			email: data.email,
+			password: data.password,
+			redirect: false,
+		});
+
+		if (result?.error) {
+			setError("Credenciales inválidas");
+			return;
 		}
+
+		router.push("/dashboard");
+		router.refresh();
 	};
 
 	return (
