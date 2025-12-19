@@ -5,7 +5,7 @@ import type {
 	AuthResponse,
 	LoginFormData,
 	RegisterRequest,
-} from "@/features/auth/types/auth.types";
+} from "@/shared/types/auth.types";
 
 export async function registerUser(
 	data: RegisterRequest,
