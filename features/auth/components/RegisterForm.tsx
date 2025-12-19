@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,9 +18,10 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
+import { registerUser } from "@/shared/services/auth.service";
+import type { RegisterFormData } from "@/shared/types/auth.types";
+
 import { registerSchema } from "@/features/auth/schemas/register.schema";
-import { registerUser } from "@/features/auth/services/auth.service";
-import type { RegisterFormData } from "@/features/auth/types/auth.types";
 
 export default function RegisterForm() {
 	const router = useRouter();
@@ -39,7 +41,22 @@ export default function RegisterForm() {
 		try {
 			const { confirmPassword: _, ...registerData } = data;
 			await registerUser(registerData);
-			router.push("/login");
+
+			// Auto-login después de registro exitoso
+			const result = await signIn("credentials", {
+				email: data.email,
+				password: data.password,
+				redirect: false,
+			});
+
+			if (result?.error) {
+				// Si falla el auto-login, redirigir a login
+				router.push("/login");
+				return;
+			}
+
+			router.push("/dashboard");
+			router.refresh();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Error al registrar");
 		}
