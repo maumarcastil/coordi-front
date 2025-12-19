@@ -1,6 +1,9 @@
-import type { Metadata } from "next";
-import ThemeRegistry from "@/shared/providers/ThemeRegistry";
 import "./globals.css";
+
+import type { Metadata } from "next";
+
+import StoreProvider from "@/shared/providers/StoreProvider";
+import ThemeRegistry from "@/shared/providers/ThemeRegistry";
 
 export const metadata: Metadata = {
 	title: "Coordi - Envíos Rápidos",
@@ -15,7 +18,9 @@ export default function RootLayout({
 	return (
 		<html lang="es">
 			<body>
-				<ThemeRegistry>{children}</ThemeRegistry>
+				<StoreProvider>
+					<ThemeRegistry>{children}</ThemeRegistry>
+				</StoreProvider>
 			</body>
 		</html>
 	);
