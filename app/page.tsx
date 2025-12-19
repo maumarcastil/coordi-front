@@ -1,65 +1,318 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import PublicIcon from "@mui/icons-material/Public";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+
+export default function LandingPage() {
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-			<main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-				<Image
-					className="dark:invert"
-					src="/next.svg"
-					alt="Next.js logo"
-					width={100}
-					height={20}
-					priority
-				/>
-				<div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-					<h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-						To get started, edit the page.tsx file.
-					</h1>
-					<p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-						Looking for a starting point or more instructions? Head over to{" "}
-						<a
-							href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-							className="font-medium text-zinc-950 dark:text-zinc-50"
+		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+			{/* Navbar */}
+			<AppBar
+				position="static"
+				color="default"
+				elevation={0}
+				sx={{ borderBottom: "1px solid #e0e0e0" }}
+			>
+				<Container maxWidth="lg">
+					<Toolbar disableGutters>
+						<Typography
+							variant="h6"
+							noWrap
+							component="div"
+							sx={{
+								flexGrow: 1,
+								fontWeight: "bold",
+								color: "primary.main",
+								display: "flex",
+								alignItems: "center",
+							}}
 						>
-							Templates
-						</a>{" "}
-						or the{" "}
-						<a
-							href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-							className="font-medium text-zinc-950 dark:text-zinc-50"
+							<LocalShippingIcon sx={{ mr: 1 }} /> COORDI
+						</Typography>
+						<Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+							<Button color="inherit">Rastreo</Button>
+							<Button color="inherit">Cotizar</Button>
+							<Button color="inherit">Servicios</Button>
+							<Button variant="contained" color="primary">
+								Ingresar
+							</Button>
+						</Box>
+					</Toolbar>
+				</Container>
+			</AppBar>
+
+			{/* Hero Section */}
+			<Box
+				sx={{
+					bgcolor: "primary.main",
+					color: "white",
+					py: 8,
+					backgroundImage: "linear-gradient(45deg, #003B95 30%, #0055cc 90%)",
+				}}
+			>
+				<Container maxWidth="md">
+					<Typography
+						component="h1"
+						variant="h2"
+						align="center"
+						gutterBottom
+						sx={{ fontWeight: 800 }}
+					>
+						Envíos Rápidos y Seguros
+					</Typography>
+					<Typography
+						variant="h5"
+						align="center"
+						paragraph
+						sx={{ opacity: 0.9 }}
+					>
+						Soluciones logísticas integrales para tus paquetes y documentos.
+						Llegamos a cada rincón del país con la confianza que necesitas.
+					</Typography>
+					<Stack
+						direction="row"
+						spacing={2}
+						justifyContent="center"
+						sx={{ mt: 4 }}
+					>
+						<Button
+							variant="contained"
+							color="secondary"
+							size="large"
+							sx={{ color: "black", fontWeight: "bold" }}
 						>
-							Learning
-						</a>{" "}
-						center.
-					</p>
-				</div>
-				<div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-					<a
-						className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-						href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
+							Rastrear Guía
+						</Button>
+						<Button
+							variant="outlined"
+							size="large"
+							sx={{
+								color: "white",
+								borderColor: "white",
+								"&:hover": {
+									borderColor: "white",
+									bgcolor: "rgba(255,255,255,0.1)",
+								},
+							}}
+						>
+							Cotizar Envío
+						</Button>
+					</Stack>
+				</Container>
+			</Box>
+
+			{/* Services Section */}
+			<Container maxWidth="lg" sx={{ py: 8 }}>
+				<Typography
+					variant="h3"
+					align="center"
+					gutterBottom
+					color="text.primary"
+					sx={{ mb: 6, fontWeight: "bold" }}
+				>
+					Nuestros Servicios
+				</Typography>
+				<Grid container spacing={4}>
+					{[
+						{
+							title: "Paquetería Nacional",
+							desc: "Envíos a todo el país con tiempos de entrega garantizados.",
+							icon: <LocalShippingIcon fontSize="large" color="primary" />,
+						},
+						{
+							title: "Envíos Internacionales",
+							desc: "Conectamos tu negocio con el mundo. Cobertura global.",
+							icon: <PublicIcon fontSize="large" color="primary" />,
+						},
+						{
+							title: "Logística Empresarial",
+							desc: "Soluciones a medida para e-commerce y grandes volúmenes.",
+							icon: <SupportAgentIcon fontSize="large" color="primary" />,
+						},
+					].map((service) => (
+						<Grid size={{ xs: 12, md: 4 }} key={service.title}>
+							<Card
+								sx={{
+									height: "100%",
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									textAlign: "center",
+									p: 2,
+									boxShadow: 3,
+								}}
+							>
+								<CardContent>
+									<Box sx={{ mb: 2 }}>{service.icon}</Box>
+									<Typography
+										gutterBottom
+										variant="h5"
+										component="h2"
+										fontWeight="bold"
+									>
+										{service.title}
+									</Typography>
+									<Typography>{service.desc}</Typography>
+								</CardContent>
+							</Card>
+						</Grid>
+					))}
+				</Grid>
+			</Container>
+
+			{/* How it works / Agenda Style */}
+			<Box sx={{ bgcolor: "background.default", py: 8 }}>
+				<Container maxWidth="lg">
+					<Typography
+						variant="h3"
+						align="center"
+						gutterBottom
+						color="text.primary"
+						sx={{ mb: 6, fontWeight: "bold" }}
 					>
-						<Image
-							className="dark:invert"
-							src="/vercel.svg"
-							alt="Vercel logomark"
-							width={16}
-							height={16}
-						/>
-						Deploy Now
-					</a>
-					<a
-						className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
+						¿Cómo funciona?
+					</Typography>
+					<Stack spacing={4}>
+						{[
+							{
+								step: "01",
+								title: "Cotiza tu envío",
+								detail:
+									"Ingresa origen, destino y peso para obtener tu tarifa.",
+							},
+							{
+								step: "02",
+								title: "Solicita recolección",
+								detail:
+									"Programamos la recogida en la puerta de tu casa o empresa.",
+							},
+							{
+								step: "03",
+								title: "Rastrea en tiempo real",
+								detail: "Monitorea el estado de tu paquete hasta su entrega.",
+							},
+						].map((item) => (
+							<Box
+								key={item.step}
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									bgcolor: "white",
+									p: 3,
+									borderRadius: 2,
+									boxShadow: 1,
+								}}
+							>
+								<Typography
+									variant="h2"
+									sx={{
+										color: "secondary.main",
+										fontWeight: "900",
+										mr: 4,
+										width: "80px",
+									}}
+								>
+									{item.step}
+								</Typography>
+								<Box>
+									<Typography variant="h5" fontWeight="bold" gutterBottom>
+										{item.title}
+									</Typography>
+									<Typography variant="body1" color="text.secondary">
+										{item.detail}
+									</Typography>
+								</Box>
+							</Box>
+						))}
+					</Stack>
+				</Container>
+			</Box>
+
+			{/* Footer */}
+			<Box
+				component="footer"
+				sx={{ bgcolor: "primary.main", color: "white", py: 6, mt: "auto" }}
+			>
+				<Container maxWidth="lg">
+					<Grid container spacing={4}>
+						<Grid size={{ xs: 12, md: 4 }}>
+							<Typography variant="h6" gutterBottom fontWeight="bold">
+								COORDI
+							</Typography>
+							<Typography variant="body2">
+								Tu aliado logístico de confianza. Llegamos donde otros no
+								llegan.
+							</Typography>
+						</Grid>
+						<Grid size={{ xs: 6, md: 4 }}>
+							<Typography variant="h6" gutterBottom fontWeight="bold">
+								Enlaces Rápidos
+							</Typography>
+							<Stack spacing={1}>
+								<Typography
+									variant="body2"
+									component="a"
+									href="#"
+									sx={{ color: "inherit", textDecoration: "none" }}
+								>
+									Rastreo
+								</Typography>
+								<Typography
+									variant="body2"
+									component="a"
+									href="#"
+									sx={{ color: "inherit", textDecoration: "none" }}
+								>
+									Cotizador
+								</Typography>
+								<Typography
+									variant="body2"
+									component="a"
+									href="#"
+									sx={{ color: "inherit", textDecoration: "none" }}
+								>
+									Puntos de Servicio
+								</Typography>
+							</Stack>
+						</Grid>
+						<Grid size={{ xs: 6, md: 4 }}>
+							<Typography variant="h6" gutterBottom fontWeight="bold">
+								Contacto
+							</Typography>
+							<Typography variant="body2">
+								Línea Nacional: 01 8000 123 456
+							</Typography>
+							<Typography variant="body2">
+								Email: contacto@coordi.com
+							</Typography>
+						</Grid>
+					</Grid>
+					<Box
+						sx={{
+							mt: 4,
+							pt: 4,
+							borderTop: "1px solid rgba(255,255,255,0.2)",
+							textAlign: "center",
+						}}
 					>
-						Documentation
-					</a>
-				</div>
-			</main>
-		</div>
+						<Typography variant="body2" sx={{ opacity: 0.7 }}>
+							© {new Date().getFullYear()} Coordi. Todos los derechos
+							reservados.
+						</Typography>
+					</Box>
+				</Container>
+			</Box>
+		</Box>
 	);
 }
