@@ -1,3 +1,5 @@
+import LoginForm from "@/features/auth/components/LoginForm";
+
 export default function LoginPage() {
-	return <h1>Iniciar Sesión</h1>;
+	return <LoginForm />;
 }
