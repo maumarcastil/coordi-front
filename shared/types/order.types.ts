@@ -1,3 +1,5 @@
+import type { City } from "./city.types";
+
 export type OrderStatus =
 	| "pending"
 	| "confirmed"
@@ -5,14 +7,32 @@ export type OrderStatus =
 	| "delivered"
 	| "cancelled";
 
-export interface Order {
+// Tipo base para listado de órdenes (incluye cityName para mostrar en tabla)
+export interface OrderListItem {
+	id: string;
+	quoteId: number;
+	trackingNumber: string | null;
+	currentStatus: OrderStatus;
+	totalPrice: number;
+	originCityId: number;
+	destinationCityId: number;
+	originCityName: string;
+	destinationCityName: string;
+	senderName: string;
+	recipientName: string;
+	estimatedDeliveryDate: string | null;
+	createdAt: string;
+}
+
+// Tipo completo para detalle de orden (incluye objetos City poblados)
+export interface OrderDetail {
 	id: string;
 	quoteId: number;
 	userId: number;
 	originCityId: number;
 	destinationCityId: number;
-	originCityName: string;
-	destinationCityName: string;
+	originCity: City;
+	destinationCity: City;
 	weight: number;
 	length: number;
 	width: number;
@@ -47,11 +67,25 @@ export interface CreateOrderRequest {
 	packageDescription?: string;
 }
 
-export interface OrderResponse {
-	order: Order;
+export interface OrderDetailResponse {
+	order: OrderDetail;
 }
 
 export interface OrdersResponse {
-	orders: Order[];
+	orders: OrderListItem[];
 }
 
+export interface OrderStatusHistory {
+	id: string;
+	orderId: string;
+	status: OrderStatus;
+	notes: string | null;
+	location: string | null;
+	changedByUserId: number | null;
+	changedBySystem: boolean;
+	createdAt: string;
+}
+
+export interface OrderHistoryResponse {
+	history: OrderStatusHistory[];
+}
