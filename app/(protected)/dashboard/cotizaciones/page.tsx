@@ -1,14 +1,14 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-export default function OrdenesPage() {
+export default function CotizacionesPage() {
 	return (
 		<Box>
 			<Typography variant="h4" fontWeight="bold" gutterBottom>
-				Órdenes de Envío
+				Cotizaciones
 			</Typography>
 			<Typography variant="body1" color="text.secondary">
-				Gestiona y rastrea todas las órdenes de envío.
+				Gestiona las cotizaciones de envío para tus clientes.
 			</Typography>
 		</Box>
 	);

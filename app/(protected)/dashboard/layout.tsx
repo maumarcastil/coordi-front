@@ -1,10 +1,26 @@
-// TODO: Agregar validación de autenticación aquí
-// Por ejemplo: verificar token, redirigir a /login si no está autenticado
+import Box from "@mui/material/Box";
+import DashboardSidebar from "@/features/dashboard/components/DashboardSidebar";
 
 export default function DashboardLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	return <>{children}</>;
+	return (
+		<Box sx={{ display: "flex", minHeight: "100vh" }}>
+			<DashboardSidebar />
+			<Box
+				component="main"
+				sx={{
+					flexGrow: 1,
+					p: 3,
+					bgcolor: "background.default",
+					minHeight: "100vh",
+				}}
+			>
+				{children}
+			</Box>
+		</Box>
+	);
 }
+
