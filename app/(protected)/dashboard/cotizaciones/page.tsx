@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
@@ -13,13 +14,18 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InboxIcon from "@mui/icons-material/Inbox";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
-import { useUserQuotes } from "@/features/quotes/hooks/useUserQuotes";
-import { useCities } from "@/features/cities/hooks/useCities";
+import { CreateOrderModal } from "@/features/orders/components/CreateOrderModal";
+
 import type { Quote } from "@/shared/types/quote.types";
+
+import { useCities } from "@/features/cities/hooks/useCities";
+import { useUserQuotes } from "@/features/quotes/hooks/useUserQuotes";
 
 const statusConfig: Record<
 	string,
@@ -50,6 +56,9 @@ export default function CotizacionesPage() {
 	const { data: quotesData, isLoading: isLoadingQuotes } = useUserQuotes();
 	const { data: citiesData, isLoading: isLoadingCities } = useCities();
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
+
 	const isLoading = isLoadingQuotes || isLoadingCities;
 	const quotes = quotesData?.quotes ?? [];
 	const cities = citiesData?.cities ?? [];
@@ -71,6 +80,16 @@ export default function CotizacionesPage() {
 
 	const getStatusConfig = (status: string) => {
 		return statusConfig[status] || { label: status, color: "warning" as const };
+	};
+
+	const handleOpenModal = (quote: Quote) => {
+		setSelectedQuote(quote);
+		setIsModalOpen(true);
+	};
+
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		setSelectedQuote(null);
 	};
 
 	if (isLoading) {
@@ -161,11 +180,15 @@ export default function CotizacionesPage() {
 										</TableCell>
 										<TableCell sx={{ fontWeight: 600 }}>Estado</TableCell>
 										<TableCell sx={{ fontWeight: 600 }}>Creado</TableCell>
+										<TableCell sx={{ fontWeight: 600 }} align="center">
+											Acciones
+										</TableCell>
 									</TableRow>
 								</TableHead>
 								<TableBody>
 									{quotes.map((quote: Quote) => {
 										const statusInfo = getStatusConfig(quote.status);
+										const canCreateOrder = quote.status === "pending";
 										return (
 											<TableRow
 												key={quote.id}
@@ -207,6 +230,37 @@ export default function CotizacionesPage() {
 														{formatDate(quote.createdAt)}
 													</Typography>
 												</TableCell>
+												<TableCell align="center">
+													{canCreateOrder ? (
+														<Button
+															variant="contained"
+															size="small"
+															startIcon={<AddShoppingCartIcon />}
+															onClick={() => handleOpenModal(quote)}
+														>
+															Crear Orden
+														</Button>
+													) : (
+														<Tooltip
+															title={
+																quote.status === "converted"
+																	? "Esta cotización ya tiene una orden"
+																	: "Cotización expirada"
+															}
+														>
+															<span>
+																<Button
+																	variant="outlined"
+																	size="small"
+																	disabled
+																	startIcon={<AddShoppingCartIcon />}
+																>
+																	Crear Orden
+																</Button>
+															</span>
+														</Tooltip>
+													)}
+												</TableCell>
 											</TableRow>
 										);
 									})}
@@ -226,6 +280,19 @@ export default function CotizacionesPage() {
 					</Typography>
 				</Box>
 			)}
+
+			{/* Modal para crear orden */}
+			<CreateOrderModal
+				open={isModalOpen}
+				onClose={handleCloseModal}
+				quote={selectedQuote}
+				originCityName={
+					selectedQuote ? getCityName(selectedQuote.originCityId) : ""
+				}
+				destinationCityName={
+					selectedQuote ? getCityName(selectedQuote.destinationCityId) : ""
+				}
+			/>
 		</Box>
 	);
 }
