@@ -10,5 +10,7 @@ export const queryKeys = {
 	// Orders
 	orders: {
 		user: ["orders", "user"] as const,
+		detail: (id: string) => ["orders", "detail", id] as const,
+		history: (id: string) => ["orders", "history", id] as const,
 	},
 } as const;
