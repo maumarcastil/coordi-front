@@ -1,14 +1,3 @@
-export interface City {
-	id: number;
-	name: string;
-	department: string;
-	code: string;
-}
-
-export interface CitiesResponse {
-	cities: City[];
-}
-
 export interface QuoteRequest {
 	originCityId: number;
 	destinationCityId: number;
@@ -37,4 +26,3 @@ export interface Quote {
 export interface QuoteResponse {
 	quote: Quote;
 }
-
