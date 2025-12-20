@@ -11,6 +11,8 @@ export interface Order {
 	userId: number;
 	originCityId: number;
 	destinationCityId: number;
+	originCityName: string;
+	destinationCityName: string;
 	weight: number;
 	length: number;
 	width: number;
