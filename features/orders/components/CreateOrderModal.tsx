@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,15 +16,18 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PersonIcon from "@mui/icons-material/Person";
 import PlaceIcon from "@mui/icons-material/Place";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import {
 	createOrderSchema,
 	type CreateOrderFormData,
 } from "@/features/orders/schemas/order.schema";
 import { useCreateOrder } from "@/features/orders/hooks/useCreateOrder";
+import type { Order } from "@/shared/types/order.types";
 import type { Quote } from "@/shared/types/quote.types";
 
 interface CreateOrderModalProps {
@@ -42,13 +46,14 @@ function formatCurrency(value: number): string {
 	}).format(value);
 }
 
-export const CreateOrderModal = ({
+export function CreateOrderModal({
 	open,
 	onClose,
 	quote,
 	originCityName,
 	destinationCityName,
-}: CreateOrderModalProps) => {
+}: CreateOrderModalProps) {
+	const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
 	const createOrderMutation = useCreateOrder();
 
 	const {
@@ -72,6 +77,7 @@ export const CreateOrderModal = ({
 	const handleClose = () => {
 		if (!createOrderMutation.isPending) {
 			reset();
+			setCreatedOrder(null);
 			createOrderMutation.reset();
 			onClose();
 		}
@@ -81,11 +87,11 @@ export const CreateOrderModal = ({
 		if (!quote) return;
 
 		try {
-			await createOrderMutation.mutateAsync({
+			const response = await createOrderMutation.mutateAsync({
 				quoteId: quote.id,
 				...data,
 			});
-			handleClose();
+			setCreatedOrder(response.order);
 		} catch {
 			// El error se maneja en el mutation
 		}
@@ -93,6 +99,119 @@ export const CreateOrderModal = ({
 
 	if (!quote) return null;
 
+	// Vista de confirmación de éxito
+	if (createdOrder) {
+		return (
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				maxWidth="sm"
+				fullWidth
+				PaperProps={{
+					sx: { borderRadius: 2 },
+				}}
+			>
+				<DialogContent>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							textAlign: "center",
+							py: 4,
+						}}
+					>
+						<CheckCircleIcon
+							sx={{
+								fontSize: 80,
+								color: "success.main",
+								mb: 2,
+							}}
+						/>
+						<Typography variant="h5" fontWeight="bold" gutterBottom>
+							¡Orden Creada Exitosamente!
+						</Typography>
+						<Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+							Tu orden de envío ha sido registrada correctamente.
+						</Typography>
+
+						<Box
+							sx={{
+								bgcolor: "grey.50",
+								borderRadius: 2,
+								p: 2,
+								width: "100%",
+								mb: 3,
+							}}
+						>
+							<Grid container spacing={2}>
+								<Grid size={6}>
+									<Typography variant="caption" color="text.secondary">
+										ID de Orden
+									</Typography>
+									<Typography
+										variant="body2"
+										fontWeight="medium"
+										sx={{
+											fontFamily: "monospace",
+											fontSize: "0.75rem",
+											wordBreak: "break-all",
+										}}
+									>
+										{createdOrder.id}
+									</Typography>
+								</Grid>
+								<Grid size={6}>
+									<Typography variant="caption" color="text.secondary">
+										Precio Total
+									</Typography>
+									<Typography
+										variant="body2"
+										fontWeight="bold"
+										color="primary.main"
+									>
+										{formatCurrency(createdOrder.totalPrice)}
+									</Typography>
+								</Grid>
+								<Grid size={6}>
+									<Typography variant="caption" color="text.secondary">
+										Origen
+									</Typography>
+									<Typography variant="body2" fontWeight="medium">
+										{originCityName}
+									</Typography>
+								</Grid>
+								<Grid size={6}>
+									<Typography variant="caption" color="text.secondary">
+										Destino
+									</Typography>
+									<Typography variant="body2" fontWeight="medium">
+										{destinationCityName}
+									</Typography>
+								</Grid>
+							</Grid>
+						</Box>
+
+						<Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+							<Button variant="outlined" fullWidth onClick={handleClose}>
+								Cerrar
+							</Button>
+							<Button
+								variant="contained"
+								fullWidth
+								startIcon={<VisibilityIcon />}
+								href={`/dashboard/ordenes/${createdOrder.id}`}
+							>
+								Ver Detalle
+							</Button>
+						</Box>
+					</Box>
+				</DialogContent>
+			</Dialog>
+		);
+	}
+
+	// Vista del formulario
 	return (
 		<Dialog
 			open={open}
@@ -347,4 +466,6 @@ export const CreateOrderModal = ({
 			</DialogActions>
 		</Dialog>
 	);
-};
+}
+
+export default CreateOrderModal;
