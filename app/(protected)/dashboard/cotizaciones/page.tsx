@@ -127,9 +127,7 @@ export default function CotizacionesPage() {
 								px: 3,
 							}}
 						>
-							<InboxIcon
-								sx={{ fontSize: 64, color: "text.disabled", mb: 2 }}
-							/>
+							<InboxIcon sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
 							<Typography variant="h6" color="text.secondary" gutterBottom>
 								No tienes cotizaciones aún
 							</Typography>
@@ -153,6 +151,9 @@ export default function CotizacionesPage() {
 											Peso (kg)
 										</TableCell>
 										<TableCell sx={{ fontWeight: 600 }} align="right">
+											Peso Vol.
+										</TableCell>
+										<TableCell sx={{ fontWeight: 600 }} align="right">
 											Peso Cobrable
 										</TableCell>
 										<TableCell sx={{ fontWeight: 600 }} align="right">
@@ -160,7 +161,6 @@ export default function CotizacionesPage() {
 										</TableCell>
 										<TableCell sx={{ fontWeight: 600 }}>Estado</TableCell>
 										<TableCell sx={{ fontWeight: 600 }}>Creado</TableCell>
-										<TableCell sx={{ fontWeight: 600 }}>Expira</TableCell>
 									</TableRow>
 								</TableHead>
 								<TableBody>
@@ -174,14 +174,17 @@ export default function CotizacionesPage() {
 													"&:last-child td": { border: 0 },
 												}}
 											>
-												<TableCell>
-													{getCityName(quote.originCityId)}
-												</TableCell>
+												<TableCell>{getCityName(quote.originCityId)}</TableCell>
 												<TableCell>
 													{getCityName(quote.destinationCityId)}
 												</TableCell>
 												<TableCell align="right">
 													{quote.weight.toFixed(1)}
+												</TableCell>
+												<TableCell align="right">
+													{quote.volumetricWeight != null
+														? quote.volumetricWeight.toFixed(1)
+														: "—"}
 												</TableCell>
 												<TableCell align="right">
 													{quote.chargeableWeight.toFixed(1)}
@@ -204,11 +207,6 @@ export default function CotizacionesPage() {
 														{formatDate(quote.createdAt)}
 													</Typography>
 												</TableCell>
-												<TableCell>
-													<Typography variant="body2" color="text.secondary">
-														{formatDate(quote.expiresAt)}
-													</Typography>
-												</TableCell>
 											</TableRow>
 										);
 									})}
@@ -223,7 +221,8 @@ export default function CotizacionesPage() {
 			{quotes.length > 0 && (
 				<Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
 					<Typography variant="body2" color="text.secondary">
-						Mostrando {quotes.length} cotización{quotes.length !== 1 ? "es" : ""}
+						Mostrando {quotes.length} cotización
+						{quotes.length !== 1 ? "es" : ""}
 					</Typography>
 				</Box>
 			)}
