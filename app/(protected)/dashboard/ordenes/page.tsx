@@ -19,7 +19,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import InboxIcon from "@mui/icons-material/Inbox";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import type { Order, OrderStatus } from "@/shared/types/order.types";
+import type { OrderListItem, OrderStatus } from "@/shared/types/order.types";
 
 import { useUserOrders } from "@/features/orders/hooks/useUserOrders";
 
@@ -152,7 +152,7 @@ export default function OrdenesPage() {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{orders.map((order: Order) => {
+									{orders.map((order: OrderListItem) => {
 										const statusInfo = getStatusConfig(order.currentStatus);
 										return (
 											<TableRow
