@@ -26,3 +26,7 @@ export interface Quote {
 export interface QuoteResponse {
 	quote: Quote;
 }
+
+export interface QuotesResponse {
+	quotes: Quote[];
+}
