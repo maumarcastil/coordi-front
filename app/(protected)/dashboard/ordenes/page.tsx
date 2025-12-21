@@ -22,6 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import type { OrderListItem, OrderStatus } from "@/shared/types/order.types";
 
 import { useUserOrders } from "@/features/orders/hooks/useUserOrders";
+import { useOrdersWebSocket } from "@/features/orders/hooks/useOrdersWebSocket";
 
 const statusConfig: Record<
 	OrderStatus,
@@ -53,6 +54,9 @@ function formatDate(dateString: string): string {
 export default function OrdenesPage() {
 	const router = useRouter();
 	const { data: ordersData, isLoading } = useUserOrders();
+
+	// WebSocket para actualizaciones en tiempo real
+	useOrdersWebSocket();
 
 	const orders = ordersData?.orders ?? [];
 

@@ -31,6 +31,7 @@ import {
 	useOrderDetail,
 	useOrderHistory,
 } from "@/features/orders/hooks/useOrderDetail";
+import { useOrdersWebSocket } from "@/features/orders/hooks/useOrdersWebSocket";
 
 type Props = {
 	params: Promise<{ id: string }>;
@@ -148,6 +149,9 @@ function TimelineItem({ item, isFirst, isLast }: TimelineItemProps) {
 export default function DetalleOrdenPage({ params }: Props) {
 	const { id } = use(params);
 	const router = useRouter();
+
+	// WebSocket para actualizaciones en tiempo real de esta orden
+	useOrdersWebSocket(id);
 
 	const { data: orderData, isLoading: isLoadingOrder } = useOrderDetail(id);
 	const { data: historyData, isLoading: isLoadingHistory } =
