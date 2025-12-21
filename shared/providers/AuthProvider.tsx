@@ -20,10 +20,8 @@ export default function AuthProvider({
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (session) {
-			console.log("session", session); // TODO: Remove this
 			dispatch(setSession(session));
 		} else {
-			console.log("no session"); // TODO: Remove this
 			dispatch(clearSession());
 		}
 	}, [session]);

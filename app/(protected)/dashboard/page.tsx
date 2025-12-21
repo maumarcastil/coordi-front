@@ -2,14 +2,8 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -60,40 +54,17 @@ const stats = [
 	},
 ];
 
-const recentShipments = [
-	{
-		id: "ENV-2024-001",
-		origin: "Bogotá",
-		destination: "Medellín",
-		status: "En tránsito",
-		statusColor: "warning",
-		date: "20 Dic 2024",
-	},
-	{
-		id: "ENV-2024-002",
-		origin: "Cali",
-		destination: "Barranquilla",
-		status: "Entregado",
-		statusColor: "success",
-		date: "19 Dic 2024",
-	},
-	{
-		id: "ENV-2024-003",
-		origin: "Cartagena",
-		destination: "Bogotá",
-		status: "En bodega",
-		statusColor: "info",
-		date: "19 Dic 2024",
-	},
-	{
-		id: "ENV-2024-004",
-		origin: "Medellín",
-		destination: "Pereira",
-		status: "En tránsito",
-		statusColor: "warning",
-		date: "18 Dic 2024",
-	},
+const weeklyActivity = [
+	{ day: "Lun", shipments: 24, delivered: 22 },
+	{ day: "Mar", shipments: 31, delivered: 28 },
+	{ day: "Mié", shipments: 18, delivered: 17 },
+	{ day: "Jue", shipments: 42, delivered: 38 },
+	{ day: "Vie", shipments: 35, delivered: 33 },
+	{ day: "Sáb", shipments: 12, delivered: 11 },
+	{ day: "Dom", shipments: 6, delivered: 5 },
 ];
+
+const maxShipments = Math.max(...weeklyActivity.map((d) => d.shipments));
 
 const topRoutes = [
 	{ route: "Bogotá → Medellín", shipments: 45, percentage: 85 },
@@ -190,7 +161,7 @@ export default function DashboardPage() {
 
 			{/* Contenido Secundario */}
 			<Grid container spacing={3}>
-				{/* Envíos Recientes */}
+				{/* Actividad Semanal */}
 				<Grid size={{ xs: 12, lg: 8 }}>
 					<Card sx={{ height: "100%" }}>
 						<CardContent sx={{ p: 3 }}>
@@ -199,65 +170,166 @@ export default function DashboardPage() {
 									display: "flex",
 									justifyContent: "space-between",
 									alignItems: "center",
-									mb: 2,
+									mb: 3,
 								}}
 							>
-								<Typography variant="h6" fontWeight="bold">
-									Envíos Recientes
-								</Typography>
-								<Typography
-									variant="body2"
-									color="primary"
-									sx={{ cursor: "pointer", fontWeight: 500 }}
-								>
-									Ver todos →
-								</Typography>
+								<Box>
+									<Typography variant="h6" fontWeight="bold">
+										Actividad Semanal
+									</Typography>
+									<Typography variant="body2" color="text.secondary">
+										Envíos totales vs entregados esta semana
+									</Typography>
+								</Box>
+								<Box sx={{ display: "flex", gap: 2 }}>
+									<Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+										<Box
+											sx={{
+												width: 12,
+												height: 12,
+												borderRadius: 1,
+												bgcolor: "#003B95",
+											}}
+										/>
+										<Typography variant="caption" color="text.secondary">
+											Enviados
+										</Typography>
+									</Box>
+									<Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+										<Box
+											sx={{
+												width: 12,
+												height: 12,
+												borderRadius: 1,
+												bgcolor: "#059669",
+											}}
+										/>
+										<Typography variant="caption" color="text.secondary">
+											Entregados
+										</Typography>
+									</Box>
+								</Box>
 							</Box>
-							<Table size="small">
-								<TableHead>
-									<TableRow>
-										<TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-										<TableCell sx={{ fontWeight: 600 }}>Origen</TableCell>
-										<TableCell sx={{ fontWeight: 600 }}>Destino</TableCell>
-										<TableCell sx={{ fontWeight: 600 }}>Estado</TableCell>
-										<TableCell sx={{ fontWeight: 600 }}>Fecha</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{recentShipments.map((shipment) => (
-										<TableRow
-											key={shipment.id}
-											sx={{ "&:last-child td": { border: 0 } }}
+
+							{/* Gráfico de barras */}
+							<Box
+								sx={{
+									display: "flex",
+									alignItems: "flex-end",
+									justifyContent: "space-between",
+									height: 200,
+									gap: 1,
+									pt: 2,
+								}}
+							>
+								{weeklyActivity.map((day) => (
+									<Box
+										key={day.day}
+										sx={{
+											flex: 1,
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+											gap: 1,
+										}}
+									>
+										{/* Barras */}
+										<Box
+											sx={{
+												display: "flex",
+												alignItems: "flex-end",
+												gap: 0.5,
+												height: 160,
+											}}
 										>
-											<TableCell>
-												<Typography variant="body2" fontWeight="medium">
-													{shipment.id}
-												</Typography>
-											</TableCell>
-											<TableCell>{shipment.origin}</TableCell>
-											<TableCell>{shipment.destination}</TableCell>
-											<TableCell>
-												<Chip
-													label={shipment.status}
-													color={
-														shipment.statusColor as
-															| "warning"
-															| "success"
-															| "info"
-													}
-													size="small"
-													sx={{ fontWeight: 500 }}
-												/>
-											</TableCell>
-											<TableCell>
-												<Typography variant="body2" color="text.secondary">
-													{shipment.date}
-												</Typography>
-											</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
+											{/* Barra de enviados */}
+											<Box
+												sx={{
+													width: 20,
+													height: `${(day.shipments / maxShipments) * 100}%`,
+													bgcolor: "#003B95",
+													borderRadius: "4px 4px 0 0",
+													transition: "height 0.3s ease",
+													"&:hover": {
+														opacity: 0.8,
+													},
+												}}
+											/>
+											{/* Barra de entregados */}
+											<Box
+												sx={{
+													width: 20,
+													height: `${(day.delivered / maxShipments) * 100}%`,
+													bgcolor: "#059669",
+													borderRadius: "4px 4px 0 0",
+													transition: "height 0.3s ease",
+													"&:hover": {
+														opacity: 0.8,
+													},
+												}}
+											/>
+										</Box>
+										{/* Etiqueta del día */}
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											fontWeight={500}
+										>
+											{day.day}
+										</Typography>
+									</Box>
+								))}
+							</Box>
+
+							{/* Resumen */}
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "center",
+									gap: 4,
+									mt: 3,
+									pt: 2,
+									borderTop: 1,
+									borderColor: "divider",
+								}}
+							>
+								<Box sx={{ textAlign: "center" }}>
+									<Typography variant="h5" fontWeight="bold" color="#003B95">
+										{weeklyActivity.reduce((sum, d) => sum + d.shipments, 0)}
+									</Typography>
+									<Typography variant="caption" color="text.secondary">
+										Total enviados
+									</Typography>
+								</Box>
+								<Box sx={{ textAlign: "center" }}>
+									<Typography variant="h5" fontWeight="bold" color="#059669">
+										{weeklyActivity.reduce((sum, d) => sum + d.delivered, 0)}
+									</Typography>
+									<Typography variant="caption" color="text.secondary">
+										Total entregados
+									</Typography>
+								</Box>
+								<Box sx={{ textAlign: "center" }}>
+									<Typography
+										variant="h5"
+										fontWeight="bold"
+										color="text.primary"
+									>
+										{Math.round(
+											(weeklyActivity.reduce((sum, d) => sum + d.delivered, 0) /
+												weeklyActivity.reduce(
+													(sum, d) => sum + d.shipments,
+													0,
+												)) *
+												100,
+										)}
+										%
+									</Typography>
+									<Typography variant="caption" color="text.secondary">
+										Tasa de entrega
+									</Typography>
+								</Box>
+							</Box>
 						</CardContent>
 					</Card>
 				</Grid>
