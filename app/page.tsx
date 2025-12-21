@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PublicIcon from "@mui/icons-material/Public";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
@@ -12,9 +14,14 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
+import { useAppSelector } from "@/shared/store/hooks";
+
 export default function LandingPage() {
+	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
 			{/* Navbar */}
@@ -26,28 +33,32 @@ export default function LandingPage() {
 			>
 				<Container maxWidth="lg">
 					<Toolbar disableGutters>
-						<Typography
-							variant="h6"
-							noWrap
-							component="div"
-							sx={{
-								flexGrow: 1,
-								fontWeight: "bold",
-								color: "primary.main",
-								display: "flex",
-								alignItems: "center",
-							}}
+						<Link href="/" style={{ textDecoration: "none", flexGrow: 1 }}>
+							<Typography
+								variant="h6"
+								noWrap
+								component="div"
+								sx={{
+									fontWeight: "bold",
+									color: "primary.main",
+									display: "flex",
+									alignItems: "center",
+									"&:hover": {
+										opacity: 0.8,
+									},
+								}}
+							>
+								<LocalShippingIcon sx={{ mr: 1 }} /> COORDI
+							</Typography>
+						</Link>
+						<Button
+							component={Link}
+							href={isAuthenticated ? "/dashboard" : "/login"}
+							variant="contained"
+							color="primary"
 						>
-							<LocalShippingIcon sx={{ mr: 1 }} /> COORDI
-						</Typography>
-						<Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-							<Button color="inherit">Rastreo</Button>
-							<Button color="inherit">Cotizar</Button>
-							<Button color="inherit">Servicios</Button>
-							<Button variant="contained" color="primary">
-								Ingresar
-							</Button>
-						</Box>
+							{isAuthenticated ? "Ir al Dashboard" : "Ingresar"}
+						</Button>
 					</Toolbar>
 				</Container>
 			</AppBar>
@@ -81,20 +92,35 @@ export default function LandingPage() {
 						Llegamos a cada rincón del país con la confianza que necesitas.
 					</Typography>
 					<Stack
-						direction="row"
+						direction={{ xs: "column", sm: "row" }}
 						spacing={2}
 						justifyContent="center"
+						alignItems="center"
 						sx={{ mt: 4 }}
 					>
+						<Tooltip title="Próximamente" arrow>
+							<span>
+								<Button
+									variant="contained"
+									color="secondary"
+									size="large"
+									disabled
+									sx={{
+										color: "black",
+										fontWeight: "bold",
+										"&.Mui-disabled": {
+											bgcolor: "rgba(255,255,255,0.3)",
+											color: "rgba(255,255,255,0.7)",
+										},
+									}}
+								>
+									Rastrear Guía
+								</Button>
+							</span>
+						</Tooltip>
 						<Button
-							variant="contained"
-							color="secondary"
-							size="large"
-							sx={{ color: "black", fontWeight: "bold" }}
-						>
-							Rastrear Guía
-						</Button>
-						<Button
+							component={Link}
+							href={isAuthenticated ? "/dashboard" : "/login"}
 							variant="outlined"
 							size="large"
 							sx={{
@@ -106,7 +132,7 @@ export default function LandingPage() {
 								},
 							}}
 						>
-							Cotizar Envío
+							{isAuthenticated ? "Ir a Cotizar" : "Cotizar Envío"}
 						</Button>
 					</Stack>
 				</Container>
