@@ -15,6 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import InboxIcon from "@mui/icons-material/Inbox";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -49,6 +50,96 @@ function formatDate(dateString: string): string {
 		month: "short",
 		year: "numeric",
 	});
+}
+
+interface OrderCardProps {
+	order: OrderListItem;
+	statusInfo: { label: string; color: "warning" | "info" | "primary" | "success" | "error" };
+	onViewDetails: () => void;
+}
+
+function OrderCard({ order, statusInfo, onViewDetails }: OrderCardProps) {
+	return (
+		<Card sx={{ mb: 2 }}>
+			<CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+				{/* Header: Tracking + Estado */}
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "flex-start",
+						mb: 1.5,
+					}}
+				>
+					<Typography
+						variant="body2"
+						fontWeight="bold"
+						sx={{ fontFamily: "monospace" }}
+					>
+						{order.trackingNumber || "Sin tracking"}
+					</Typography>
+					<Chip
+						label={statusInfo.label}
+						color={statusInfo.color}
+						size="small"
+						sx={{ fontWeight: 500 }}
+					/>
+				</Box>
+
+				{/* Ruta */}
+				<Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 0.5 }}>
+					<Typography variant="body2" fontWeight="medium">
+						{order.originCityName}
+					</Typography>
+					<ArrowForwardIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+					<Typography variant="body2" fontWeight="medium">
+						{order.destinationCityName}
+					</Typography>
+				</Box>
+
+				{/* Remitente → Destinatario */}
+				<Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1.5 }}>
+					<Typography variant="caption" color="text.secondary">
+						{order.senderName}
+					</Typography>
+					<ArrowForwardIcon sx={{ fontSize: 12, color: "text.disabled" }} />
+					<Typography variant="caption" color="text.secondary">
+						{order.recipientName}
+					</Typography>
+				</Box>
+
+				{/* Footer: Precio + Fecha + Botón */}
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						pt: 1.5,
+						borderTop: 1,
+						borderColor: "divider",
+					}}
+				>
+					<Box>
+						<Typography variant="h6" fontWeight="bold" color="primary.main">
+							{formatCurrency(order.totalPrice)}
+						</Typography>
+						<Typography variant="caption" color="text.secondary">
+							{formatDate(order.createdAt)}
+						</Typography>
+					</Box>
+					<Button
+						variant="outlined"
+						size="small"
+						startIcon={<VisibilityIcon />}
+						onClick={onViewDetails}
+						sx={{ borderRadius: 2 }}
+					>
+						Ver
+					</Button>
+				</Box>
+			</CardContent>
+		</Card>
+	);
 }
 
 export default function OrdenesPage() {
@@ -108,8 +199,51 @@ export default function OrdenesPage() {
 				</Typography>
 			</Box>
 
-			{/* Tabla de órdenes */}
-			<Card>
+			{/* Vista móvil: Cards */}
+			<Box sx={{ display: { xs: "block", md: "none" } }}>
+				{orders.length === 0 ? (
+					<Card>
+						<CardContent>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									justifyContent: "center",
+									py: 6,
+								}}
+							>
+								<InboxIcon sx={{ fontSize: 56, color: "text.disabled", mb: 2 }} />
+								<Typography variant="h6" color="text.secondary" gutterBottom>
+									No tienes órdenes aún
+								</Typography>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+									textAlign="center"
+								>
+									Crea tu primera orden desde una cotización.
+								</Typography>
+							</Box>
+						</CardContent>
+					</Card>
+				) : (
+					orders.map((order: OrderListItem) => {
+						const statusInfo = getStatusConfig(order.currentStatus);
+						return (
+							<OrderCard
+								key={order.id}
+								order={order}
+								statusInfo={statusInfo}
+								onViewDetails={() => handleViewDetails(order.id)}
+							/>
+						);
+					})
+				)}
+			</Box>
+
+			{/* Vista desktop: Tabla de órdenes */}
+			<Card sx={{ display: { xs: "none", md: "block" } }}>
 				<CardContent sx={{ p: 0 }}>
 					{orders.length === 0 ? (
 						<Box

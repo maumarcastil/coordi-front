@@ -168,8 +168,10 @@ export default function DashboardPage() {
 							<Box
 								sx={{
 									display: "flex",
+									flexDirection: { xs: "column", sm: "row" },
 									justifyContent: "space-between",
-									alignItems: "center",
+									alignItems: { xs: "flex-start", sm: "center" },
+									gap: { xs: 1, sm: 0 },
 									mb: 3,
 								}}
 							>
@@ -181,12 +183,12 @@ export default function DashboardPage() {
 										Envíos totales vs entregados esta semana
 									</Typography>
 								</Box>
-								<Box sx={{ display: "flex", gap: 2 }}>
+								<Box sx={{ display: "flex", gap: { xs: 1.5, sm: 2 } }}>
 									<Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
 										<Box
 											sx={{
-												width: 12,
-												height: 12,
+												width: 10,
+												height: 10,
 												borderRadius: 1,
 												bgcolor: "#003B95",
 											}}
@@ -198,8 +200,8 @@ export default function DashboardPage() {
 									<Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
 										<Box
 											sx={{
-												width: 12,
-												height: 12,
+												width: 10,
+												height: 10,
 												borderRadius: 1,
 												bgcolor: "#059669",
 											}}
@@ -245,10 +247,10 @@ export default function DashboardPage() {
 											{/* Barra de enviados */}
 											<Box
 												sx={{
-													width: 20,
+													width: { xs: 8, sm: 14, md: 20 },
 													height: `${(day.shipments / maxShipments) * 100}%`,
 													bgcolor: "#003B95",
-													borderRadius: "4px 4px 0 0",
+													borderRadius: "3px 3px 0 0",
 													transition: "height 0.3s ease",
 													"&:hover": {
 														opacity: 0.8,
@@ -258,10 +260,10 @@ export default function DashboardPage() {
 											{/* Barra de entregados */}
 											<Box
 												sx={{
-													width: 20,
+													width: { xs: 8, sm: 14, md: 20 },
 													height: `${(day.delivered / maxShipments) * 100}%`,
 													bgcolor: "#059669",
-													borderRadius: "4px 4px 0 0",
+													borderRadius: "3px 3px 0 0",
 													transition: "height 0.3s ease",
 													"&:hover": {
 														opacity: 0.8,
@@ -286,7 +288,7 @@ export default function DashboardPage() {
 								sx={{
 									display: "flex",
 									justifyContent: "center",
-									gap: 4,
+									gap: { xs: 2, sm: 4 },
 									mt: 3,
 									pt: 2,
 									borderTop: 1,
@@ -294,7 +296,11 @@ export default function DashboardPage() {
 								}}
 							>
 								<Box sx={{ textAlign: "center" }}>
-									<Typography variant="h5" fontWeight="bold" color="#003B95">
+									<Typography
+										sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem" } }}
+										fontWeight="bold"
+										color="#003B95"
+									>
 										{weeklyActivity.reduce((sum, d) => sum + d.shipments, 0)}
 									</Typography>
 									<Typography variant="caption" color="text.secondary">
@@ -302,7 +308,11 @@ export default function DashboardPage() {
 									</Typography>
 								</Box>
 								<Box sx={{ textAlign: "center" }}>
-									<Typography variant="h5" fontWeight="bold" color="#059669">
+									<Typography
+										sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem" } }}
+										fontWeight="bold"
+										color="#059669"
+									>
 										{weeklyActivity.reduce((sum, d) => sum + d.delivered, 0)}
 									</Typography>
 									<Typography variant="caption" color="text.secondary">
@@ -311,7 +321,7 @@ export default function DashboardPage() {
 								</Box>
 								<Box sx={{ textAlign: "center" }}>
 									<Typography
-										variant="h5"
+										sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem" } }}
 										fontWeight="bold"
 										color="text.primary"
 									>

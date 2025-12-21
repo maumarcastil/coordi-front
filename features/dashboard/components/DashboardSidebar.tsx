@@ -60,6 +60,7 @@ export default function DashboardSidebar() {
 				width: drawerWidth,
 				flexShrink: 0,
 				transition: "width 0.2s ease-in-out",
+				display: { xs: "none", md: "block" },
 				"& .MuiDrawer-paper": {
 					width: drawerWidth,
 					boxSizing: "border-box",
@@ -68,6 +69,8 @@ export default function DashboardSidebar() {
 					borderRight: "none",
 					transition: "width 0.2s ease-in-out",
 					overflowX: "hidden",
+					display: { xs: "none", md: "flex" },
+					flexDirection: "column",
 				},
 			}}
 		>

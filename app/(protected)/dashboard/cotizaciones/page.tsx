@@ -17,6 +17,7 @@ import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import InboxIcon from "@mui/icons-material/Inbox";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
@@ -50,6 +51,120 @@ function formatDate(dateString: string): string {
 		month: "short",
 		year: "numeric",
 	});
+}
+
+interface QuoteCardProps {
+	quote: Quote;
+	originCity: string;
+	destinationCity: string;
+	statusInfo: { label: string; color: "warning" | "success" | "error" };
+	onCreateOrder: () => void;
+}
+
+function QuoteCard({
+	quote,
+	originCity,
+	destinationCity,
+	statusInfo,
+	onCreateOrder,
+}: QuoteCardProps) {
+	const canCreateOrder = quote.status === "pending";
+
+	return (
+		<Card sx={{ mb: 2 }}>
+			<CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+				{/* Header: Ruta + Estado */}
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "flex-start",
+						mb: 1.5,
+					}}
+				>
+					<Box sx={{ display: "flex", alignItems: "center", gap: 0.5, flex: 1 }}>
+						<Typography variant="body1" fontWeight="medium">
+							{originCity}
+						</Typography>
+						<ArrowForwardIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+						<Typography variant="body1" fontWeight="medium">
+							{destinationCity}
+						</Typography>
+					</Box>
+					<Chip
+						label={statusInfo.label}
+						color={statusInfo.color}
+						size="small"
+						sx={{ fontWeight: 500 }}
+					/>
+				</Box>
+
+				{/* Detalles */}
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						mb: 1.5,
+					}}
+				>
+					<Box>
+						<Typography variant="caption" color="text.secondary">
+							Peso cobrable
+						</Typography>
+						<Typography variant="body2" fontWeight="medium">
+							{quote.chargeableWeight.toFixed(1)} kg
+						</Typography>
+					</Box>
+					<Box sx={{ textAlign: "right" }}>
+						<Typography variant="caption" color="text.secondary">
+							Precio
+						</Typography>
+						<Typography variant="h6" fontWeight="bold" color="primary.main">
+							{formatCurrency(quote.totalPrice)}
+						</Typography>
+					</Box>
+				</Box>
+
+				{/* Footer: Fecha + Acción */}
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						pt: 1.5,
+						borderTop: 1,
+						borderColor: "divider",
+					}}
+				>
+					<Typography variant="caption" color="text.secondary">
+						{formatDate(quote.createdAt)}
+					</Typography>
+					{canCreateOrder ? (
+						<Button
+							variant="contained"
+							size="small"
+							startIcon={<AddShoppingCartIcon />}
+							onClick={onCreateOrder}
+							sx={{ borderRadius: 2 }}
+						>
+							Crear Orden
+						</Button>
+					) : (
+						<Button
+							variant="outlined"
+							size="small"
+							disabled
+							startIcon={<AddShoppingCartIcon />}
+							sx={{ borderRadius: 2 }}
+						>
+							Crear Orden
+						</Button>
+					)}
+				</Box>
+			</CardContent>
+		</Card>
+	);
 }
 
 export default function CotizacionesPage() {
@@ -132,8 +247,53 @@ export default function CotizacionesPage() {
 				</Typography>
 			</Box>
 
-			{/* Tabla de cotizaciones */}
-			<Card>
+			{/* Vista móvil: Cards */}
+			<Box sx={{ display: { xs: "block", md: "none" } }}>
+				{quotes.length === 0 ? (
+					<Card>
+						<CardContent>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									justifyContent: "center",
+									py: 6,
+								}}
+							>
+								<InboxIcon sx={{ fontSize: 56, color: "text.disabled", mb: 2 }} />
+								<Typography variant="h6" color="text.secondary" gutterBottom>
+									No tienes cotizaciones aún
+								</Typography>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+									textAlign="center"
+								>
+									Crea tu primera cotización desde el dashboard.
+								</Typography>
+							</Box>
+						</CardContent>
+					</Card>
+				) : (
+					quotes.map((quote: Quote) => {
+						const statusInfo = getStatusConfig(quote.status);
+						return (
+							<QuoteCard
+								key={quote.id}
+								quote={quote}
+								originCity={getCityName(quote.originCityId)}
+								destinationCity={getCityName(quote.destinationCityId)}
+								statusInfo={statusInfo}
+								onCreateOrder={() => handleOpenModal(quote)}
+							/>
+						);
+					})
+				)}
+			</Box>
+
+			{/* Vista desktop: Tabla de cotizaciones */}
+			<Card sx={{ display: { xs: "none", md: "block" } }}>
 				<CardContent sx={{ p: 0 }}>
 					{quotes.length === 0 ? (
 						<Box
