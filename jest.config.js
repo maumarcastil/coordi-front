@@ -14,6 +14,8 @@ const config = {
 	testMatch: ["**/__tests__/**/*.test.ts", "**/__tests__/**/*.test.tsx"],
 	collectCoverageFrom: [
 		"features/**/schemas/**/*.ts",
+		"shared/store/slices/**/*.ts",
+		"!**/__tests__/**",
 		"!**/*.d.ts",
 		"!**/node_modules/**",
 	],
