@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Coordi Frontend
 
-## Getting Started
+Aplicación web para gestión de envíos con cotizaciones, órdenes y tracking en tiempo real.
 
-First, run the development server:
+## Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **UI:** Material UI 7
+- **Estado Global:** Redux Toolkit
+- **Data Fetching:** TanStack Query (React Query)
+- **Formularios:** React Hook Form + Zod
+- **Autenticación:** NextAuth.js 5
+- **Testing:** Jest + React Testing Library
+- **Lenguaje:** TypeScript
+
+## Requisitos
+
+- Node.js 18+
+- pnpm 10+
+
+## Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Instalar dependencias
+pnpm install
+
+# Configurar variables de entorno (ya viene con valores para desarrollo)
+cp .env.example .env.local
+
+# Iniciar en desarrollo
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación estará en `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> **Nota:** El archivo `.env.example` ya incluye valores configurados para desarrollo local. Solo necesitas copiarlo a `.env.local` y funcionará inmediatamente.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables de Entorno
 
-## Learn More
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | URL del backend API | `http://localhost:3001` |
+| `NEXT_PUBLIC_WS_URL` | URL del WebSocket | `ws://localhost:3001` |
+| `AUTH_SECRET` | Secreto para NextAuth | Incluido para dev |
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Comando | Descripción |
+|---------|-------------|
+| `pnpm dev` | Desarrollo con hot-reload |
+| `pnpm build` | Compilar para producción |
+| `pnpm start` | Ejecutar en producción |
+| `pnpm lint` | Verificar código con Biome |
+| `pnpm test` | Ejecutar tests |
+| `pnpm test:watch` | Tests en modo watch |
+| `pnpm test:coverage` | Tests con cobertura |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Arquitectura
 
-## Deploy on Vercel
+El proyecto sigue una arquitectura basada en **Features**:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/                 # App Router (páginas y layouts)
+├── features/            # Módulos por dominio
+│   ├── auth/           # Autenticación
+│   │   ├── components/ # Componentes específicos
+│   │   ├── schemas/    # Validaciones Zod
+│   │   └── hooks/      # Hooks específicos
+│   ├── quotes/         # Cotizaciones
+│   └── orders/         # Órdenes
+└── shared/              # Código compartido
+    ├── services/       # Llamadas API
+    ├── hooks/          # Hooks globales
+    ├── store/          # Redux store
+    ├── providers/      # Context providers
+    └── types/          # Tipos TypeScript
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Testing
+
+El proyecto incluye tests unitarios y de integración:
+
+| Tipo | Tecnología | Cobertura |
+|------|------------|-----------|
+| Schemas (Zod) | Jest | Validaciones de formularios |
+| Redux Reducers | Jest | Estado global |
+| Componentes | React Testing Library | UI e interacciones |
+| Custom Hooks | renderHook | Lógica de hooks |
+
+```bash
+# Ejecutar tests
+pnpm test
+
+# Ver cobertura
+pnpm test:coverage
+```
+
+## Funcionalidades
+
+- **Autenticación:** Login/Registro con NextAuth.js
+- **Cotizaciones:** Crear y consultar cotizaciones de envío
+- **Órdenes:** Gestionar órdenes de envío
+- **Tiempo Real:** Actualizaciones via WebSocket
+- **Responsive:** Diseño adaptable con Material UI
+
+## Licencia
+
+ISC
