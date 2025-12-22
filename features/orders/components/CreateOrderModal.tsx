@@ -27,7 +27,7 @@ import {
 	type CreateOrderFormData,
 } from "@/features/orders/schemas/order.schema";
 import { useCreateOrder } from "@/features/orders/hooks/useCreateOrder";
-import type { Order } from "@/shared/types/order.types";
+import type { OrderDetail } from "@/shared/types/order.types";
 import type { Quote } from "@/shared/types/quote.types";
 
 interface CreateOrderModalProps {
@@ -53,7 +53,7 @@ export function CreateOrderModal({
 	originCityName,
 	destinationCityName,
 }: CreateOrderModalProps) {
-	const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
+	const [createdOrder, setCreatedOrder] = useState<OrderDetail | null>(null);
 	const createOrderMutation = useCreateOrder();
 
 	const {
